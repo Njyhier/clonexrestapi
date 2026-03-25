@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id String @id @default(cuid())
+  username String
+  email String
+  passwordHash String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Post{
+  id String @id @default(cuid())
+  userId String
+  mediaUrl String
+  caption String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("posts")
+}
+
+
+model Comment{
+  id String @id @default(cuid())
+  postId String 
+  userId String
+  text String
+  created_at DateTime @default(now())
+
+  @@map("comments") 
+}
+
+model Like{
+  id String @id @default(cuid())
+  postId String 
+  userId String
+  created_at DateTime @default(now())
+
+  @@map("likes")
+}
+
+model Follow{
+  id String @id @default(cuid())
+  followerId String
+  followingId String
+  createdAt DateTime
+
+  @@map("followers")
+}
+

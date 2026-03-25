@@ -1,0 +1,26 @@
+{
+  "name": "clonex",
+  "version": "1.0.0",
+  "description": "A clone of X(formerly Twitter)",
+  "license": "MIT",
+  "author": "Njihia",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx nodemon"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@types/typescript": "^0.4.29",
+    "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.5.0",
+    "@types/express": "^5.0.6",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14",
+    "prisma": "^7.5.0",
+    "ts-node": "^10.9.2"
+  }
+}
