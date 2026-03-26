@@ -14,22 +14,29 @@ datasource db {
 
 model User {
   id String @id @default(cuid())
-  username String
+  username String @unique
   email String
+  posts Post []
   passwordHash String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  comments Comment[]
+  likes Like[]
+  followers Follow[] @relation("followers")
+  following Follow[] @relation("following")
 
   @@map("users")
 }
 
 model Post{
   id String @id @default(cuid())
+  user User @relation(fields: [userId],references: [id] )
   userId String
   mediaUrl String
   caption String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  comments Comment[]
 
   @@map("posts")
 }
@@ -37,25 +44,34 @@ model Post{
 
 model Comment{
   id String @id @default(cuid())
+  user User @relation(fields: [userId],references: [id])
+  post Post @relation(fields: [postId], references: [id])
   postId String 
   userId String
   text String
   created_at DateTime @default(now())
+  likes Like []
 
   @@map("comments") 
 }
 
 model Like{
   id String @id @default(cuid())
-  postId String 
+  postId String?
+  commentId String?
   userId String
+  comment Comment? @relation(fields: [commentId],references: [id])
   created_at DateTime @default(now())
+  user User @relation(fields: [userId],references: [id])
 
   @@map("likes")
 }
 
 model Follow{
   id String @id @default(cuid())
+  follower User @relation("followers",fields: [followerId],references: [id])
+  following User @relation("following",fields: [followingId], references: [id])
+
   followerId String
   followingId String
   createdAt DateTime
