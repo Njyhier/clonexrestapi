@@ -36,7 +36,8 @@ model Post{
   caption String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  comments Comment[]
+  comments Comment[] 
+  likes Like[]
 
   @@map("posts")
 }
@@ -61,6 +62,7 @@ model Like{
   commentId String?
   userId String
   comment Comment? @relation(fields: [commentId],references: [id])
+  post Post? @relation(fields: [postId], references: [id])
   created_at DateTime @default(now())
   user User @relation(fields: [userId],references: [id])
 

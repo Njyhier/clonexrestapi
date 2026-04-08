@@ -1,0 +1,105 @@
+import { prisma } from "./prisma.ts";
+import type { Response, Request } from "express";
+import { Params } from "../types.ts";
+
+export async function createPost(req: Request<Params>, res: Response) {
+  const { caption, mediaUrl, userId } = req.body;
+  // const {userId}= req.params
+
+  try {
+    const post = await prisma.post.create({
+      data: {
+        userId,
+        caption,
+        mediaUrl,
+      },
+    });
+    return res.status(201).json({
+      message: "Post created ",
+      payload: post,
+    });
+  } catch (error: any) {
+    console.log("Error", error);
+  }
+}
+
+export const readPosts = async (req: Request, res: Response) => {
+  try {
+    const posts = await prisma.post.findMany({
+      include: {
+        user: true,
+        comments: true,
+        likes: true,
+      },
+    });
+    return res
+      .status(200)
+      .json({ message: "Posts retrieved successfully", payload: posts });
+  } catch (error: any) {
+    console.log("Error", error);
+  }
+};
+
+export const readPostById = async (req: Request<Params>, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const post = await prisma.post.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+        comments: {
+          take: 10,
+          orderBy: { created_at: "desc" },
+        },
+
+        likes: true,
+      },
+    });
+    return res.status(200).json({
+      message: "Post retrieved",
+      payload: post,
+    });
+  } catch (error: any) {
+    console.log("Error", error);
+  }
+};
+
+export const readUserPosts = async (req: Request<Params>, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const posts = await prisma.post.findMany({
+      where: { userId },
+      include: {
+        user: true,
+      },
+    });
+    return res.status(200).json({
+      message: "Retrieved post",
+      payload: posts,
+    });
+  } catch (error: any) {
+    console.log("Error", error);
+  }
+};
+
+export const deletePost = async (req: Request<Params>, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    await prisma.post.delete({
+      where: { id },
+    });
+    return res.send({
+      message: "Post deleted successfully",
+    });
+  } catch (error: any) {
+    console.error("Error", error);
+  }
+};
