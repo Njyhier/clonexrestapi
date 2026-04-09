@@ -1,6 +1,6 @@
-import { prisma } from "./prisma.ts";
+import { prisma } from "./prisma";
 import type { Request, Response } from "express";
-import { Params } from "../types.ts";
+import { Params } from "../types";
 
 export const createComment = async (req: Request<Params>, res: Response) => {
   try {

@@ -1,8 +1,8 @@
 import type { Response, Request, NextFunction } from "express";
-import { prisma } from "./prisma.ts";
+import { prisma } from "./prisma";
 import { hashSync, compareSync } from "bcrypt";
 import jwt from "jsonwebtoken";
-import { SECRET_KEY } from "../secrets.ts";
+import { SECRET_KEY } from "../secrets";
 
 export const login = async (req: Request, res: Response) => {
   try {

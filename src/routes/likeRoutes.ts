@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createLike, unlikePost } from "../controllers/likes.ts";
+import { createLike, unlikePost } from "../controllers/likes";
 
 export const likesRouter: Router = Router();
 

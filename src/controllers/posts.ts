@@ -1,6 +1,6 @@
-import { prisma } from "./prisma.ts";
+import { prisma } from "./prisma";
 import type { Response, Request } from "express";
-import { Params } from "../types.ts";
+import { Params } from "../types";
 
 export async function createPost(req: Request<Params>, res: Response) {
   const { caption, mediaUrl, userId } = req.body;

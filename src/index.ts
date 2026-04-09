@@ -1,7 +1,7 @@
 import express from "express";
 import type { Express } from "express";
-import { PORT } from "./secrets.ts";
-import rootRouter from "./routes/mainRoute.ts";
+import { PORT } from "./secrets";
+import rootRouter from "./routes/mainRoute";
 import cors from "cors";
 
 const app: Express = express();

@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_1 = require("./auth");
+const postsRoutes_1 = require("./postsRoutes");
+const commentRoutes_1 = require("./commentRoutes");
+const likeRoutes_1 = require("./likeRoutes");
+const rootRouter = (0, express_1.Router)();
+rootRouter.use("/auth", auth_1.authRouter);
+rootRouter.use("/posts", postsRoutes_1.postsRouter);
+rootRouter.use("/comments", commentRoutes_1.commentRoutes);
+rootRouter.use("/likes", likeRoutes_1.likesRouter);
+exports.default = rootRouter;

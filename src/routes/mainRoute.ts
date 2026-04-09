@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { authRouter } from "./auth.ts";
-import { postsRouter } from "./postsRoutes.ts";
-import { commentRoutes } from "./commentRoutes.ts";
-import { likesRouter } from "./likeRoutes.ts";
+import { authRouter } from "./auth";
+import { postsRouter } from "./postsRoutes";
+import { commentRoutes } from "./commentRoutes";
+import { likesRouter } from "./likeRoutes";
 const rootRouter: Router = Router();
 
 rootRouter.use("/auth", authRouter);

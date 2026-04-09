@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { readPostComments } from "../controllers/comment.ts";
+import { readPostComments } from "../controllers/comment";
 import {
   createPost,
   readPosts,
   readPostById,
   readUserPosts,
   deletePost,
-} from "../controllers/posts.ts";
-import { readPostLikes } from "../controllers/likes.ts";
+} from "../controllers/posts";
+import { readPostLikes } from "../controllers/likes";
 export const postsRouter: Router = Router();
 postsRouter.post("/createposts", createPost);
 postsRouter.get("/readposts", readPosts);

@@ -1,7 +1,6 @@
-import { error } from "node:console";
-import { prisma } from "./prisma.ts";
+import { prisma } from "./prisma";
 import type { Request, Response } from "express";
-import { Params } from "../types.ts";
+import { Params } from "../types";
 
 export const createLike = async (req: Request, res: Response) => {
   try {
