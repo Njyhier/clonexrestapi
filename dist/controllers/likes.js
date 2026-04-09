@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.unlikePost = exports.readPostLikes = exports.createLike = void 0;
-const prisma_1 = require("./prisma");
-const createLike = async (req, res) => {
+import { prisma } from "./prisma";
+export const createLike = async (req, res) => {
     try {
         const { postId, userId } = req.body;
-        const like = await prisma_1.prisma.like.create({
+        const like = await prisma.like.create({
             data: {
                 postId,
                 userId,
@@ -20,11 +17,10 @@ const createLike = async (req, res) => {
         console.log("Error", error);
     }
 };
-exports.createLike = createLike;
-const readPostLikes = async (req, res) => {
+export const readPostLikes = async (req, res) => {
     try {
         const { postId } = req.params;
-        const likes = await prisma_1.prisma.like.findMany({
+        const likes = await prisma.like.findMany({
             where: { postId },
         });
         return res.status(200).json({
@@ -36,11 +32,10 @@ const readPostLikes = async (req, res) => {
         console.log("Error", error);
     }
 };
-exports.readPostLikes = readPostLikes;
-const unlikePost = async (req, res) => {
+export const unlikePost = async (req, res) => {
     try {
         const { id } = req.params;
-        await prisma_1.prisma.like.delete({
+        await prisma.like.delete({
             where: { id },
         });
         return res.status(200).json({
@@ -51,4 +46,3 @@ const unlikePost = async (req, res) => {
         console.log("Error", error);
     }
 };
-exports.unlikePost = unlikePost;

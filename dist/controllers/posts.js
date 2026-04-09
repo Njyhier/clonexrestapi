@@ -1,13 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePost = exports.readUserPosts = exports.readPostById = exports.readPosts = void 0;
-exports.createPost = createPost;
-const prisma_1 = require("./prisma");
-async function createPost(req, res) {
+import { prisma } from "./prisma";
+export async function createPost(req, res) {
     const { caption, mediaUrl, userId } = req.body;
     // const {userId}= req.params
     try {
-        const post = await prisma_1.prisma.post.create({
+        const post = await prisma.post.create({
             data: {
                 userId,
                 caption,
@@ -23,9 +19,9 @@ async function createPost(req, res) {
         console.log("Error", error);
     }
 }
-const readPosts = async (req, res) => {
+export const readPosts = async (req, res) => {
     try {
-        const posts = await prisma_1.prisma.post.findMany({
+        const posts = await prisma.post.findMany({
             include: {
                 user: true,
                 comments: true,
@@ -40,11 +36,10 @@ const readPosts = async (req, res) => {
         console.log("Error", error);
     }
 };
-exports.readPosts = readPosts;
-const readPostById = async (req, res) => {
+export const readPostById = async (req, res) => {
     try {
         const { id } = req.params;
-        const post = await prisma_1.prisma.post.findUnique({
+        const post = await prisma.post.findUnique({
             where: { id },
             include: {
                 user: {
@@ -69,11 +64,10 @@ const readPostById = async (req, res) => {
         console.log("Error", error);
     }
 };
-exports.readPostById = readPostById;
-const readUserPosts = async (req, res) => {
+export const readUserPosts = async (req, res) => {
     try {
         const { userId } = req.params;
-        const posts = await prisma_1.prisma.post.findMany({
+        const posts = await prisma.post.findMany({
             where: { userId },
             include: {
                 user: true,
@@ -88,11 +82,10 @@ const readUserPosts = async (req, res) => {
         console.log("Error", error);
     }
 };
-exports.readUserPosts = readUserPosts;
-const deletePost = async (req, res) => {
+export const deletePost = async (req, res) => {
     try {
         const { id } = req.params;
-        await prisma_1.prisma.post.delete({
+        await prisma.post.delete({
             where: { id },
         });
         return res.send({
@@ -103,4 +96,3 @@ const deletePost = async (req, res) => {
         console.error("Error", error);
     }
 };
-exports.deletePost = deletePost;

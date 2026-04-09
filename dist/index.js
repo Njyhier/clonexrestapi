@@ -1,16 +1,14 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const secrets_1 = require("./secrets");
-const mainRoute_1 = __importDefault(require("./routes/mainRoute"));
-const cors_1 = __importDefault(require("cors"));
-const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
-app.use(express_1.default.json());
-app.use("/", mainRoute_1.default);
-app.listen(secrets_1.PORT, () => {
-    console.log("App Working");
+import express from "express";
+import rootRouter from "./routes/mainRoute.js";
+import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config({ path: ".env" });
+const PORT = process.env.PORT;
+const SECRET_KEY = process.env.SECRET_KEY;
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use("/", rootRouter);
+app.listen(PORT, () => {
+  console.log("App Working");
 });

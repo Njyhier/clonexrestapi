@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.readFollowing = exports.readFollowers = exports.unfollow = exports.createFollow = void 0;
-const createFollow = async (req, res) => {
+export const createFollow = async (req, res) => {
     //   try {
     //     const { followerId, followingId } = req.params;
     //     if (!followerId || !followingId) {
@@ -21,8 +18,7 @@ const createFollow = async (req, res) => {
     //     console.log("Error", error);
     //   }
 };
-exports.createFollow = createFollow;
-const unfollow = async (req, res) => {
+export const unfollow = async (req, res) => {
     //   try {
     //     const { id } = req.params;
     //     if (!id || Array.isArray(id)) {
@@ -38,8 +34,5 @@ const unfollow = async (req, res) => {
     //     console.log("Error", error);
     //   }
 };
-exports.unfollow = unfollow;
-const readFollowers = async (req, res) => { };
-exports.readFollowers = readFollowers;
-const readFollowing = async (req, res) => { };
-exports.readFollowing = readFollowing;
+export const readFollowers = async (req, res) => { };
+export const readFollowing = async (req, res) => { };
