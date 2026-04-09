@@ -9,11 +9,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
+  schemas = ["clonex"]
 }
 
 model User {
-  id String @id @default(cuid())
+  id String @id(map:"clonex_product_pkey") @default(cuid())
   username String @unique
   email String
   posts Post []
@@ -25,11 +26,11 @@ model User {
   followers Follow[] @relation("followers")
   following Follow[] @relation("following")
 
-  @@map("users")
+  @@schema("clonex")
 }
 
 model Post{
-  id String @id @default(cuid())
+  id String @id(map:"clonex_post_pkey") @default(cuid())
   user User @relation(fields: [userId],references: [id] )
   userId String
   mediaUrl String
@@ -39,12 +40,12 @@ model Post{
   comments Comment[] 
   likes Like[]
 
-  @@map("posts")
+  @@schema("clonex")
 }
 
 
 model Comment{
-  id String @id @default(cuid())
+  id String @id(map:"clonex_comment_pkey") @default(cuid())
   user User @relation(fields: [userId],references: [id])
   post Post @relation(fields: [postId], references: [id])
   postId String 
@@ -53,11 +54,11 @@ model Comment{
   created_at DateTime @default(now())
   likes Like []
 
-  @@map("comments") 
+  @@schema("clonex") 
 }
 
 model Like{
-  id String @id @default(cuid())
+  id String @id(map:"clonex_like_pkey") @default(cuid())
   postId String?
   commentId String?
   userId String
@@ -66,11 +67,11 @@ model Like{
   created_at DateTime @default(now())
   user User @relation(fields: [userId],references: [id])
 
-  @@map("likes")
+  @@schema("clonex")
 }
 
 model Follow{
-  id String @id @default(cuid())
+  id String @id(map:"clonex_follow_pkey") @default(cuid())
   follower User @relation("followers",fields: [followerId],references: [id])
   following User @relation("following",fields: [followingId], references: [id])
 
@@ -78,6 +79,6 @@ model Follow{
   followingId String
   createdAt DateTime
 
-  @@map("followers")
+  @@schema("clonex")
 }
 
