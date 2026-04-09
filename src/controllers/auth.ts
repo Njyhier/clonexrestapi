@@ -2,8 +2,11 @@ import type { Response, Request, NextFunction } from "express";
 import { prisma } from "./prisma";
 import { hashSync, compareSync } from "bcrypt";
 import jwt from "jsonwebtoken";
-import { SECRET_KEY } from "../secrets";
+import dotenv from "dotenv";
 
+dotenv.config({ path: ".env" });
+
+const SECRET_KEY = process.env.SECRET_KEY!;
 export const login = async (req: Request, res: Response) => {
   try {
     const { password, username } = req.body;

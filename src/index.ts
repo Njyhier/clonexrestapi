@@ -1,8 +1,13 @@
 import express from "express";
 import type { Express } from "express";
-import { PORT } from "./secrets";
 import rootRouter from "./routes/mainRoute";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config({ path: ".env" });
+
+const PORT = process.env.PORT;
+const SECRET_KEY = process.env.SECRET_KEY!;
 
 const app: Express = express();
 app.use(cors());
