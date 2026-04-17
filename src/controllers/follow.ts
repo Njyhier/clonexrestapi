@@ -1,5 +1,4 @@
 import { Params } from "../types";
-import { prisma } from "./prisma";
 import type { Request, Response } from "express";
 
 export const createFollow = async (req: Request<Params>, res: Response) => {
