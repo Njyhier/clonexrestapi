@@ -1,10 +1,16 @@
 import { prisma } from "./prisma";
 import type { Response, Request } from "express";
-import { Params } from "../types";
+import { Params, Query } from "../types";
 
-export async function createPost(req: Request<Params>, res: Response) {
-  const { caption, mediaUrl, userId } = req.body;
-  // const {userId}= req.params
+export async function createPost(
+  req: Request<Params, {}, { caption: string; mediaUrl: string }, Query>,
+  res: Response,
+) {
+  const { userId } = req.params;
+  const { caption, mediaUrl = "" } = req.body;
+  if (!userId) {
+    return res.status(400).json({ message: "Missing user id!" });
+  }
 
   try {
     const post = await prisma.post.create({

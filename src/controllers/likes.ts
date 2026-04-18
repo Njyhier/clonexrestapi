@@ -2,9 +2,12 @@ import { prisma } from "./prisma";
 import type { Request, Response } from "express";
 import { Params } from "../types";
 
-export const createLike = async (req: Request, res: Response) => {
+export const createLike = async (req: Request<Params>, res: Response) => {
   try {
-    const { postId, userId } = req.body;
+    const { postId, userId } = req.params;
+    if (!userId || !postId) {
+      return res.status(400).json({ message: "Missing post or user id" });
+    }
     const like = await prisma.like.create({
       data: {
         postId,

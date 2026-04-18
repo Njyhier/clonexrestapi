@@ -8,3 +8,9 @@ export class Params {
 export interface Token {
   userId?: string;
 }
+
+export type Query = {
+  userId?: string;
+  age?: string;
+  email?: string;
+};

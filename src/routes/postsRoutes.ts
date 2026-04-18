@@ -9,7 +9,7 @@ import {
 } from "../controllers/posts";
 import { readPostLikes } from "../controllers/likes";
 export const postsRouter: Router = Router();
-postsRouter.post("/createposts", createPost);
+postsRouter.post("/users/:userId/createposts", createPost);
 postsRouter.get("/readposts", readPosts);
 postsRouter.get("/:id", readPostById);
 postsRouter.get("/userposts/:userId", readUserPosts);
