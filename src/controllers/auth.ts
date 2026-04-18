@@ -12,14 +12,14 @@ export const login = async (req: Request, res: Response) => {
   try {
     const { password, username } = req.body;
     const user = await prisma.cXUser.findFirst({
-      where: { username },
+      where: { cxusername: username },
     });
 
     if (!user) {
       throw Error("Invalid username or password");
     }
 
-    if (!compareSync(password, user?.passwordHash ?? "")) {
+    if (!compareSync(password, user?.passwordhash ?? "")) {
       throw Error("Invalid username or password");
       return;
     }
@@ -44,14 +44,13 @@ export const signup = async (req: Request<Params>, res: Response) => {
     return res.status(400).json({
       message: "Provide all the information",
     });
-    user;
   }
   try {
     const user = await prisma.cXUser.create({
       data: {
-        username,
-        email,
-        passwordHash: hashSync(password, 10),
+        cxusername: username ?? "",
+        email: email,
+        passwordhash: hashSync(password, 10),
       },
     });
     return res.status(201).json({
