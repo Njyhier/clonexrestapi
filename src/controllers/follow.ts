@@ -7,7 +7,7 @@ export const createFollow = async (req: Request<Params>, res: Response) => {
   //     if (!followerId || !followingId) {
   //       return res.status(400).json({ error: "Invalid input" });
   //     }
-  //     const follow = await prisma.follow.create({
+  //     const follow = await prisma.cXFollow.create({
   //       data: {
   //         followerId,
   //         followingId,
@@ -28,7 +28,7 @@ export const unfollow = async (req: Request, res: Response) => {
   //     if (!id || Array.isArray(id)) {
   //       return res.status(400).json({ error: "Invalid id" });
   //     }
-  //     await prisma.follow.delete({
+  //     await prisma.cXFollow.delete({
   //       where: id,
   //     });
   //     return res.status(200).json({

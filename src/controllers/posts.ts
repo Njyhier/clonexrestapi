@@ -32,7 +32,7 @@ export async function createPost(
 export const readPosts = async (req: Request, res: Response) => {
   console.log("fetching posts");
   try {
-    const posts = await prisma.post.findMany({
+    const posts = await prisma.cXPost.findMany({
       include: {
         user: true,
         comments: true,
@@ -54,7 +54,7 @@ export const readPostById = async (req: Request<Params>, res: Response) => {
   try {
     const { id } = req.params;
 
-    const post = await prisma.post.findUnique({
+    const post = await prisma.cXPost.findUnique({
       where: { id },
       include: {
         user: {
@@ -84,7 +84,7 @@ export const readUserPosts = async (req: Request<Params>, res: Response) => {
   try {
     const { userId } = req.params;
 
-    const posts = await prisma.post.findMany({
+    const posts = await prisma.cXPost.findMany({
       where: { userId },
       include: {
         user: true,
@@ -103,7 +103,7 @@ export const deletePost = async (req: Request<Params>, res: Response) => {
   try {
     const { id } = req.params;
 
-    await prisma.post.delete({
+    await prisma.cXPost.delete({
       where: { id },
     });
     return res.send({

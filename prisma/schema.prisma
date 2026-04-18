@@ -6,28 +6,15 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id           String   @id @default(cuid())
-  username     String   @unique
-  email        String
-  passwordhash String
-  createdat    DateTime @default(now())
-  updatedat    DateTime @default(now())
-  clonex_posts Post[]
+model CXFollow {
+  id                                                          String         @id @default(cuid())
+  followerid                                                  String
+  followingid                                                 String
+  createdat                                                   DateTime       @db.Timestamp(6)
+  clonex_cxusers_clonex_followers_followeridToclonex_cxusers  clonex_cxusers @relation("clonex_followers_followeridToclonex_cxusers", fields: [followerid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_follower_user")
+  clonex_cxusers_clonex_followers_followingidToclonex_cxusers clonex_cxusers @relation("clonex_followers_followingidToclonex_cxusers", fields: [followingid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_following_user")
 
-  @@map("clonex_users")
-}
-
-model Post {
-  id           String   @id @default(cuid())
-  userid       String
-  mediaurl     String
-  caption      String
-  created_at   DateTime @default(now())
-  updated_at   DateTime @default(now()) @updatedAt
-  clonex_users User     @relation(fields: [userid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_posts_user")
-
-  @@map("clonex_posts")
+  @@map("clonex_followers")
 }
 
 model addresses {
@@ -74,6 +61,54 @@ model categories {
   name        String     @unique @db.VarChar(100)
   description String?
   products    products[]
+}
+
+model clonex_cxcomments {
+  id             String           @id
+  cxpostid       String
+  cxuserid       String
+  text           String
+  created_at     DateTime?        @default(now()) @db.Timestamp(6)
+  clonex_cxposts clonex_cxposts   @relation(fields: [cxpostid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_comment_post")
+  clonex_cxusers clonex_cxusers   @relation(fields: [cxuserid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_comment_user")
+  clonex_cxlikes clonex_cxlikes[]
+}
+
+model clonex_cxlikes {
+  id                String             @id
+  cxpostid          String?
+  cxcommentid       String?
+  cxuserid          String
+  created_at        DateTime?          @default(now()) @db.Timestamp(6)
+  clonex_cxcomments clonex_cxcomments? @relation(fields: [cxcommentid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_like_comment")
+  clonex_cxposts    clonex_cxposts?    @relation(fields: [cxpostid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_like_post")
+  clonex_cxusers    clonex_cxusers     @relation(fields: [cxuserid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_like_user")
+}
+
+model clonex_cxposts {
+  id                String              @id
+  cxuserid          String
+  mediaurl          String
+  caption           String
+  created_at        DateTime?           @default(now()) @db.Timestamp(6)
+  updated_at        DateTime?           @default(now()) @db.Timestamp(6)
+  clonex_cxcomments clonex_cxcomments[]
+  clonex_cxlikes    clonex_cxlikes[]
+  clonex_cxusers    clonex_cxusers      @relation(fields: [cxuserid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_post_user")
+}
+
+model clonex_cxusers {
+  id                                                            String              @id
+  cxusername                                                    String              @unique
+  email                                                         String
+  passwordhash                                                  String
+  createdat                                                     DateTime?           @default(now()) @db.Timestamp(6)
+  updatedat                                                     DateTime?           @default(now()) @db.Timestamp(6)
+  clonex_cxcomments                                             clonex_cxcomments[]
+  clonex_cxlikes                                                clonex_cxlikes[]
+  clonex_cxposts                                                clonex_cxposts[]
+  clonex_followers_clonex_followers_followeridToclonex_cxusers  CXFollow[]          @relation("clonex_followers_followeridToclonex_cxusers")
+  clonex_followers_clonex_followers_followingidToclonex_cxusers CXFollow[]          @relation("clonex_followers_followingidToclonex_cxusers")
 }
 
 model inventories {
@@ -163,11 +198,6 @@ model roles {
   updated_at       DateTime?          @db.Timestamptz(6)
   role_permissions role_permissions[]
   user_roles       user_roles[]
-}
-
-model test {
-  id   Int    @id @default(autoincrement())
-  name String
 }
 
 model user_addresses {

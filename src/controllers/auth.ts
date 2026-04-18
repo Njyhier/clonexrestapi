@@ -11,7 +11,7 @@ const SECRET_KEY = process.env.SECRET_KEY!;
 export const login = async (req: Request, res: Response) => {
   try {
     const { password, username } = req.body;
-    const user = await prisma.user.findFirst({
+    const user = await prisma.cXUser.findFirst({
       where: { username },
     });
 
@@ -44,9 +44,10 @@ export const signup = async (req: Request<Params>, res: Response) => {
     return res.status(400).json({
       message: "Provide all the information",
     });
+    user;
   }
   try {
-    const user = await prisma.user.create({
+    const user = await prisma.cXUser.create({
       data: {
         username,
         email,
@@ -84,7 +85,7 @@ export const getCurrentUser = async (
       });
     }
     const payload: { userId: string } = jwt.verify(token, SECRET_KEY) as any;
-    const user = await prisma.user.findFirst({
+    const user = await prisma.cXUser.findFirst({
       where: { id: payload?.userId },
     });
     if (!user) {

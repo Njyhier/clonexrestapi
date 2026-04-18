@@ -8,7 +8,7 @@ export const createLike = async (req: Request<Params>, res: Response) => {
     if (!userId || !postId) {
       return res.status(400).json({ message: "Missing post or user id" });
     }
-    const like = await prisma.like.create({
+    const like = await prisma.cXLike.create({
       data: {
         postId,
         userId,
@@ -26,7 +26,7 @@ export const createLike = async (req: Request<Params>, res: Response) => {
 export const readPostLikes = async (req: Request<Params>, res: Response) => {
   try {
     const { postId } = req.params;
-    const likes = await prisma.like.findMany({
+    const likes = await prisma.cXLike.findMany({
       where: { postId },
     });
     return res.status(200).json({
@@ -41,7 +41,7 @@ export const readPostLikes = async (req: Request<Params>, res: Response) => {
 export const unlikePost = async (req: Request<Params>, res: Response) => {
   try {
     const { id } = req.params;
-    await prisma.like.delete({
+    await prisma.cXLike.delete({
       where: { id },
     });
     return res.status(200).json({
