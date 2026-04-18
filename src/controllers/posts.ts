@@ -35,8 +35,8 @@ export const readPosts = async (req: Request, res: Response) => {
     const posts = await prisma.cXPost.findMany({
       include: {
         cxUser: true,
-        comments: true,
-        likes: true,
+        cxcomments: true,
+        cxlikes: true,
       },
     });
     return res
