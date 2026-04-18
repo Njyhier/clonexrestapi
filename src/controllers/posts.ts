@@ -63,7 +63,7 @@ export const readPostById = async (req: Request<Params>, res: Response) => {
             cxusername: true,
           },
         },
-        comments: {
+        cxComments: {
           take: 10,
           orderBy: { created_at: "desc" },
         },
