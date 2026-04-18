@@ -11,8 +11,8 @@ model CXFollow {
   followerid                                                  String
   followingid                                                 String
   createdat                                                   DateTime       @db.Timestamp(6)
-  CXUser_clonex_followers_followeridToCXUser  CXUser @relation("clonex_followers_followeridToCXUser", fields: [followerid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_follower_user")
-  CXUser_clonex_followers_followingidToCXUser CXUser @relation("clonex_followers_followingidToCXUser", fields: [followingid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_following_user")
+  cxUser_clonex_followers_followeridToCXUser  CXUser @relation("clonex_followers_followeridToCXUser", fields: [followerid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_follower_user")
+  cxUser_clonex_followers_followingidToCXUser CXUser @relation("clonex_followers_followingidToCXUser", fields: [followingid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_following_user")
 
   @@map("clonex_followers")
 }
@@ -64,42 +64,42 @@ model categories {
 }
 
 model CXComment {
-  id             String           @id
+  id             String           @id @default(cuid())
   cxpostid       String
   cxuserid       String
   text           String
   created_at     DateTime?        @default(now()) @db.Timestamp(6)
-  CXPost CXPost   @relation(fields: [cxpostid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_comment_post")
-  CXUser CXUser   @relation(fields: [cxuserid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_comment_user")
-  CXLike CXLike[]
+  cxPost CXPost   @relation(fields: [cxpostid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_comment_post")
+  cxUser CXUser   @relation(fields: [cxuserid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_comment_user")
+  cxLike CXLike[]
 
   @@map("clonex_cxcomments")
 }
 
 model CXLike {
-  id                String             @id
+  id                String             @id @default(cuid())
   cxpostid          String?
   cxcommentid       String?
   cxuserid          String
   created_at        DateTime?          @default(now()) @db.Timestamp(6)
-  CXComment CXComment? @relation(fields: [cxcommentid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_like_comment")
-  CXPost    CXPost?    @relation(fields: [cxpostid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_like_post")
-  CXUser    CXUser     @relation(fields: [cxuserid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_like_user")
+  cxComment CXComment? @relation(fields: [cxcommentid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_like_comment")
+  cxPost    CXPost?    @relation(fields: [cxpostid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_like_post")
+  cxUser    CXUser     @relation(fields: [cxuserid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_like_user")
 
     @@map("clonex_cxlikes")
 
 }
 
 model CXPost {
-  id                String              @id
+  id                String              @id @default(cuid())
   cxuserid          String
   mediaurl          String
   caption           String
   created_at        DateTime?           @default(now()) @db.Timestamp(6)
   updated_at        DateTime?           @default(now()) @db.Timestamp(6)
-  CXComment CXComment[]
-  CXLike    CXLike[]
-  CXUser    CXUser      @relation(fields: [cxuserid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_post_user")
+  cxComment CXComment[]
+  cxLike    CXLike[]
+  cxUser    CXUser      @relation(fields: [cxuserid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_post_user")
 
     @@map("clonex_cxposts")
 
@@ -112,9 +112,9 @@ model CXUser {
   passwordhash                                                  String
   createdat                                                     DateTime?           @default(now()) @db.Timestamp(6)
   updatedat                                                     DateTime?           @default(now()) @db.Timestamp(6)
-  CXComment                                             CXComment[]
-  CXLike                                                CXLike[]
-  CXPost                                                CXPost[]
+  cxComment                                             CXComment[]
+  cxLike                                                CXLike[]
+  cxPost                                                CXPost[]
   clonex_followers_clonex_followers_followeridToCXUser  CXFollow[]          @relation("clonex_followers_followeridToCXUser")
   clonex_followers_clonex_followers_followingidToCXUser CXFollow[]          @relation("clonex_followers_followingidToCXUser")
 

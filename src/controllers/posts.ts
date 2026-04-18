@@ -13,11 +13,11 @@ export async function createPost(
   }
 
   try {
-    const post = await prisma.post.create({
+    const post = await prisma.cXPost.create({
       data: {
-        userId,
+        cxuserid: userId,
         caption,
-        mediaUrl,
+        mediaurl: mediaUrl,
       },
     });
     return res.status(201).json({
@@ -34,7 +34,7 @@ export const readPosts = async (req: Request, res: Response) => {
   try {
     const posts = await prisma.cXPost.findMany({
       include: {
-        user: true,
+        cxUser: true,
         comments: true,
         likes: true,
       },
@@ -57,7 +57,7 @@ export const readPostById = async (req: Request<Params>, res: Response) => {
     const post = await prisma.cXPost.findUnique({
       where: { id },
       include: {
-        user: {
+        cxUser: {
           select: {
             id: true,
             username: true,
@@ -85,9 +85,9 @@ export const readUserPosts = async (req: Request<Params>, res: Response) => {
     const { userId } = req.params;
 
     const posts = await prisma.cXPost.findMany({
-      where: { userId },
+      where: { cxuserid: userId },
       include: {
-        user: true,
+        cxUser: true,
       },
     });
     return res.status(200).json({

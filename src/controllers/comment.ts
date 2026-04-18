@@ -11,8 +11,8 @@ export const createComment = async (req: Request<Params>, res: Response) => {
     }
     const comment = await prisma.cXComment.create({
       data: {
-        postId,
-        userId,
+        cxpostid: postId,
+        cxuserid: userId,
         text,
       },
     });
@@ -30,7 +30,7 @@ export const readPostComments = async (req: Request<Params>, res: Response) => {
     const { postId } = req.params;
 
     const comments = await prisma.cXComment.findMany({
-      where: { postId },
+      where: { cxpostid: postId },
     });
     return res.status(200).json({
       message: "Comments Retrieved Successfully",
