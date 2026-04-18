@@ -68,7 +68,7 @@ export const readPostById = async (req: Request<Params>, res: Response) => {
           orderBy: { created_at: "desc" },
         },
 
-        likes: true,
+        cxLikes: true,
       },
     });
     return res.status(200).json({
@@ -79,7 +79,7 @@ export const readPostById = async (req: Request<Params>, res: Response) => {
     console.log("Error", error);
     return res
       .status(500)
-      .json({ message: "Failed to fetch posts", error: error?.message });
+      .json({ message: "Failed to fetch post", error: error?.message });
   }
 };
 
