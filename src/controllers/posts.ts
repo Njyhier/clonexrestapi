@@ -44,10 +44,10 @@ export const readPosts = async (req: Request, res: Response) => {
       .json({ message: "Posts retrieved successfully", payload: posts });
   } catch (error: any) {
     console.log("Error", error);
-    return res.status(500).json({
-    message: "Failed to fetch posts",
-    error: error?.message,
-  })
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch posts", error: error?.message });
+  }
 };
 
 export const readPostById = async (req: Request<Params>, res: Response) => {
