@@ -60,7 +60,7 @@ export const readPostById = async (req: Request<Params>, res: Response) => {
         cxUser: {
           select: {
             id: true,
-            username: true,
+            cxusername: true,
           },
         },
         comments: {
