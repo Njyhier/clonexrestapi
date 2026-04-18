@@ -3,6 +3,7 @@ import { prisma } from "./prisma";
 import { hashSync, compareSync } from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { Params } from "../types";
 
 dotenv.config({ path: ".env" });
 
@@ -37,8 +38,13 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const signup = async (req: Request, res: Response) => {
+export const signup = async (req: Request<Params>, res: Response) => {
   const { username, password, email } = req.body;
+  if (!username || !password || !email) {
+    return res.status(400).json({
+      message: "Provide all the information",
+    });
+  }
   try {
     const user = await prisma.user.create({
       data: {

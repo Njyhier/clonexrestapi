@@ -1,175 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
 generator client {
   provider = "prisma-client-js"
 }
+
 
 datasource db {
   provider = "postgresql"
 }
 
-model addresses {
-  id             String           @id @db.VarChar(60)
-  city           String?          @db.VarChar(150)
-  county         String?          @db.VarChar
-  ward           String?          @db.VarChar
-  street         String?          @db.VarChar
-  created_at     DateTime         @db.Timestamptz(6)
-  updated_at     DateTime?        @db.Timestamptz(6)
-  address        String?          @db.VarChar(60)
-  user_addresses user_addresses[]
+model User {
+  id String @id @default(cuid())
+  username String @unique
+  email String
+  posts Post []
+  passwordHash String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  comments Comment[]
+  likes Like[]
+  followers Follow[] @relation("followers")
+  following Follow[] @relation("following")
+
+  @@map("clonex_users")
 }
 
-model alembic_version {
-  version_num String @id(map: "alembic_version_pkc") @db.VarChar(32)
+model Post{
+  id String @id @default(cuid())
+  user User @relation(fields: [userId],references: [id] )
+  userId String
+  mediaUrl String
+  caption String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  comments Comment[] 
+  likes Like[]
+
+  @@map("clonex_posts")
 }
 
-model cartitems {
-  id         String    @id @db.VarChar(60)
-  name       String?   @db.VarChar(60)
-  product_id String?   @db.VarChar(60)
-  cart_id    String?   @db.VarChar(60)
-  quantity   Int
-  price      Decimal   @db.Decimal(10, 2)
-  category   String?   @db.VarChar(60)
-  image_url  String?   @db.VarChar
-  carts      carts?    @relation(fields: [cart_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  products   products? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+model Comment{
+  id String @id @default(cuid())
+  user User @relation(fields: [userId],references: [id])
+  post Post @relation(fields: [postId], references: [id])
+  postId String 
+  userId String
+  text String
+  created_at DateTime @default(now())
+  likes Like []
+
+  @@map("clonex_comments")
+
 }
 
-model carts {
-  id         String      @id @db.VarChar(60)
-  user_id    String?     @unique @db.VarChar(60)
-  created_at DateTime    @db.Timestamptz(6)
-  updated_at DateTime?   @db.Timestamptz(6)
-  cartitems  cartitems[]
-  users      users?      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  orders     orders[]
+model Like{
+  id String @id @default(cuid())
+  postId String?
+  commentId String?
+  userId String
+  comment Comment? @relation(fields: [commentId],references: [id])
+  post Post? @relation(fields: [postId], references: [id])
+  created_at DateTime @default(now())
+  user User @relation(fields: [userId],references: [id])
+
+  @@map("clonex_likes")
 }
 
-model categories {
-  id          String     @id @db.VarChar(60)
-  name        String     @unique @db.VarChar(100)
-  description String?
-  products    products[]
+model Follow{
+  id String @id @default(cuid())
+  follower User @relation("followers",fields: [followerId],references: [id])
+  following User @relation("following",fields: [followingId], references: [id])
+
+  followerId String
+  followingId String
+  createdAt DateTime
+
+  @@map("clonex_followers")
 }
 
-model inventories {
-  id                String    @id @db.VarChar(60)
-  product_id        String    @db.VarChar(60)
-  quantity          Int
-  reserved_quantity Int
-  cost_price        Decimal   @db.Decimal(10, 2)
-  selling_price     Decimal   @db.Decimal(10, 2)
-  created_at        DateTime  @db.Timestamptz(6)
-  updated_at        DateTime? @db.Timestamptz(6)
-  location          String?   @unique @db.VarChar(60)
-  products          products  @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
-model order_items {
-  id         String    @id @db.VarChar(60)
-  product_id String?   @db.VarChar(60)
-  quantity   Int
-  price      Decimal   @db.Decimal(10, 2)
-  image_url  String?   @db.VarChar
-  order_id   String?   @db.VarChar(60)
-  created_at DateTime  @db.Timestamp(6)
-  updated_at DateTime? @db.Timestamp(6)
-  orders     orders?   @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model orders {
-  id           String        @id @db.VarChar(60)
-  total_amount Decimal       @db.Decimal(10, 2)
-  status       String        @db.VarChar(20)
-  created_at   DateTime      @db.Timestamp(6)
-  updated_at   DateTime?     @db.Timestamp(6)
-  cart_id      String        @db.VarChar(60)
-  order_items  order_items[]
-  carts        carts         @relation(fields: [cart_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model permissions {
-  id               String             @id @db.VarChar(60)
-  name             String             @unique @db.VarChar(250)
-  action           String             @db.VarChar(15)
-  target           String             @db.VarChar(15)
-  created_at       DateTime           @db.Timestamptz(6)
-  updated_at       DateTime?          @db.Timestamptz(6)
-  role_permissions role_permissions[]
-}
-
-model product_images {
-  id          String    @id @db.VarChar
-  url         String    @unique @db.VarChar
-  file_name   String    @unique @db.VarChar
-  is_main     Boolean?
-  product_id  String    @db.VarChar
-  uploaded_at DateTime? @db.Timestamptz(6)
-  products    products  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model products {
-  id             String           @id @db.VarChar(60)
-  name           String?          @db.VarChar
-  price          Decimal?         @db.Decimal(10, 2)
-  description    String?
-  category_name  String?          @db.VarChar
-  created_at     DateTime         @db.Timestamptz(6)
-  updated_at     DateTime?        @db.Timestamptz(6)
-  cartitems      cartitems[]
-  inventories    inventories[]
-  product_images product_images[]
-  categories     categories?      @relation(fields: [category_name], references: [name], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model role_permissions {
-  id            Int?
-  role_id       String      @db.VarChar(60)
-  permission_id String      @db.VarChar(60)
-  permissions   permissions @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  roles         roles       @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@id([role_id, permission_id])
-}
-
-model roles {
-  id               String             @id @db.VarChar(60)
-  name             String             @unique @db.VarChar(250)
-  created_at       DateTime           @db.Timestamptz(6)
-  updated_at       DateTime?          @db.Timestamptz(6)
-  role_permissions role_permissions[]
-  user_roles       user_roles[]
-}
-
-model user_addresses {
-  user_id    String    @db.VarChar(60)
-  address_id String    @db.VarChar(60)
-  addresses  addresses @relation(fields: [address_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([user_id, address_id])
-}
-
-model user_roles {
-  id      Int?
-  role_id String @db.VarChar(60)
-  user_id String @db.VarChar(60)
-  roles   roles  @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users   users  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@id([role_id, user_id])
-}
-
-model users {
-  id             String           @id @db.VarChar(60)
-  first_name     String?          @db.VarChar
-  last_name      String?          @db.VarChar
-  email          String           @unique @db.VarChar
-  username       String           @unique @db.VarChar(60)
-  created_at     DateTime         @db.Timestamptz(6)
-  updated_at     DateTime?        @db.Timestamptz(6)
-  password_hash  String           @db.VarChar(255)
-  carts          carts?
-  user_addresses user_addresses[]
-  user_roles     user_roles[]
-}
