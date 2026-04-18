@@ -1,14 +1,15 @@
 import { PrismaClient } from "@prisma/client";
-// import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 import dotenv from "dotenv";
-import { dot } from "node:test/reporters";
 
 dotenv.config({ path: ".env" });
 
 const db_url = process.env.DATABASE_URL;
+if (!db_url) {
+  throw new Error("DATABASE_URL is not defined");
+}
+const adapter = new PrismaPg({
+  connectionString: db_url,
+});
 
-// const adapter = new PrismaBetterSqlite3({
-//   url: db_url || "file:./clonex.db",
-// });
-
-export const prisma = new PrismaClient({ log: ["query"] });
+export const prisma = new PrismaClient({ adapter, log: ["query"] });
