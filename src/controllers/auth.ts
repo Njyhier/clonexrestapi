@@ -59,11 +59,14 @@ export const signup = async (req: Request<Params>, res: Response) => {
     });
   } catch (error: any) {
     console.error(error);
-    if (error.code === "P2002") {
-      return res
-        .status(400)
-        .json({ message: "email or username already exists" });
-    }
+    return res
+      .status(500)
+      .json({ message: "signup failed", error: error?.message });
+    // if (error.code === "P2002") {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "email or username already exists" });
+    // }
   }
   return res.status(500).json({ message: "Internal server error" });
 };
