@@ -10,11 +10,11 @@ async function createPost(req, res) {
         return res.status(400).json({ message: "Missing user id!" });
     }
     try {
-        const post = await prisma_1.prisma.post.create({
+        const post = await prisma_1.prisma.cXPost.create({
             data: {
-                userId,
+                cxuserid: userId,
                 caption,
-                mediaUrl,
+                mediaurl: mediaUrl,
             },
         });
         return res.status(201).json({
@@ -27,12 +27,13 @@ async function createPost(req, res) {
     }
 }
 const readPosts = async (req, res) => {
+    console.log("fetching posts");
     try {
-        const posts = await prisma_1.prisma.post.findMany({
+        const posts = await prisma_1.prisma.cXPost.findMany({
             include: {
-                user: true,
-                comments: true,
-                likes: true,
+                cxUser: true,
+                cxComments: true,
+                cxLikes: true,
             },
         });
         return res
@@ -41,26 +42,29 @@ const readPosts = async (req, res) => {
     }
     catch (error) {
         console.log("Error", error);
+        return res
+            .status(500)
+            .json({ message: "Failed to fetch posts", error: error?.message });
     }
 };
 exports.readPosts = readPosts;
 const readPostById = async (req, res) => {
     try {
         const { id } = req.params;
-        const post = await prisma_1.prisma.post.findUnique({
+        const post = await prisma_1.prisma.cXPost.findUnique({
             where: { id },
             include: {
-                user: {
+                cxUser: {
                     select: {
                         id: true,
-                        username: true,
+                        cxusername: true,
                     },
                 },
-                comments: {
+                cxComments: {
                     take: 10,
                     orderBy: { created_at: "desc" },
                 },
-                likes: true,
+                cxLikes: true,
             },
         });
         return res.status(200).json({
@@ -70,16 +74,19 @@ const readPostById = async (req, res) => {
     }
     catch (error) {
         console.log("Error", error);
+        return res
+            .status(500)
+            .json({ message: "Failed to fetch post", error: error?.message });
     }
 };
 exports.readPostById = readPostById;
 const readUserPosts = async (req, res) => {
     try {
         const { userId } = req.params;
-        const posts = await prisma_1.prisma.post.findMany({
-            where: { userId },
+        const posts = await prisma_1.prisma.cXPost.findMany({
+            where: { cxuserid: userId },
             include: {
-                user: true,
+                cxUser: true,
             },
         });
         return res.status(200).json({
@@ -95,7 +102,7 @@ exports.readUserPosts = readUserPosts;
 const deletePost = async (req, res) => {
     try {
         const { id } = req.params;
-        await prisma_1.prisma.post.delete({
+        await prisma_1.prisma.cXPost.delete({
             where: { id },
         });
         return res.send({

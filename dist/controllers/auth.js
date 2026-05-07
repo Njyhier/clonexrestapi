@@ -13,13 +13,13 @@ const SECRET_KEY = process.env.SECRET_KEY;
 const login = async (req, res) => {
     try {
         const { password, username } = req.body;
-        const user = await prisma_1.prisma.user.findFirst({
-            where: { username },
+        const user = await prisma_1.prisma.cXUser.findFirst({
+            where: { cxusername: username },
         });
         if (!user) {
             throw Error("Invalid username or password");
         }
-        if (!(0, bcrypt_1.compareSync)(password, user?.passwordHash ?? "")) {
+        if (!(0, bcrypt_1.compareSync)(password, user?.passwordhash ?? "")) {
             throw Error("Invalid username or password");
             return;
         }
@@ -44,11 +44,11 @@ const signup = async (req, res) => {
         });
     }
     try {
-        const user = await prisma_1.prisma.user.create({
+        const user = await prisma_1.prisma.cXUser.create({
             data: {
-                username,
-                email,
-                passwordHash: (0, bcrypt_1.hashSync)(password, 10),
+                cxusername: username ?? "",
+                email: email,
+                passwordhash: (0, bcrypt_1.hashSync)(password, 10),
             },
         });
         return res.status(201).json({
@@ -58,11 +58,14 @@ const signup = async (req, res) => {
     }
     catch (error) {
         console.error(error);
-        if (error.code === "P2002") {
-            return res
-                .status(400)
-                .json({ message: "email or username already exists" });
-        }
+        return res
+            .status(500)
+            .json({ message: "signup failed", error: error?.message });
+        // if (error.code === "P2002") {
+        //   return res
+        //     .status(400)
+        //     .json({ message: "email or username already exists" });
+        // }
     }
     return res.status(500).json({ message: "Internal server error" });
 };
@@ -76,7 +79,7 @@ const getCurrentUser = async (req, res, next) => {
             });
         }
         const payload = jsonwebtoken_1.default.verify(token, SECRET_KEY);
-        const user = await prisma_1.prisma.user.findFirst({
+        const user = await prisma_1.prisma.cXUser.findFirst({
             where: { id: payload?.userId },
         });
         if (!user) {

@@ -9,10 +9,10 @@ const createComment = async (req, res) => {
         if (!postId || !userId) {
             return res.status(400).json({ error: "Missing postId or userId" });
         }
-        const comment = await prisma_1.prisma.comment.create({
+        const comment = await prisma_1.prisma.cXComment.create({
             data: {
-                postId,
-                userId,
+                cxpostid: postId,
+                cxuserid: userId,
                 text,
             },
         });
@@ -29,8 +29,8 @@ exports.createComment = createComment;
 const readPostComments = async (req, res) => {
     try {
         const { postId } = req.params;
-        const comments = await prisma_1.prisma.comment.findMany({
-            where: { postId },
+        const comments = await prisma_1.prisma.cXComment.findMany({
+            where: { cxpostid: postId },
         });
         return res.status(200).json({
             message: "Comments Retrieved Successfully",
@@ -48,7 +48,7 @@ const deleteComment = async (req, res) => {
         if (!id || Array.isArray(id)) {
             return res.status(400).json({ error: "Invalid id" });
         }
-        await prisma_1.prisma.comment.delete({
+        await prisma_1.prisma.cXComment.delete({
             where: { id },
         });
         return res.status(200).json({ message: "Comment deleted successfully" });
