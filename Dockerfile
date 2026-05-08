@@ -8,6 +8,14 @@ RUN npm install
 
 COPY . .
 
+ARG DATABASE_URL
+ARG PORT
+ARG SECRET_KEY
+
+ENV DATABASE_URL=$DATABASE_URL
+ENV PORT=$PORT
+ENV SECRET_KEY=$SECRET_KEY
+
 RUN npx prisma generate
 
 RUN npm run build

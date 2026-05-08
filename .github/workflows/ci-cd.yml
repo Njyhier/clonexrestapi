@@ -2,7 +2,7 @@ name: Build and Push DockerImage
 
 on:
   push:
-    branches: ["master"]
+    branches: ['master']
 
 jobs:
   build:
@@ -43,7 +43,12 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
+          context: .
           push: true
           tags: |
             njyhier/clonex:latest
             njyhier/clonex:${{ github.sha }}
+          build-args: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            PORT=${{ secrets.PORT }}
+            SECRET_KEY=${{ secrets.SECRET_KEY }}
