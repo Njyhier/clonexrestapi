@@ -21,6 +21,9 @@ const adapter_pg_1 = require("@prisma/adapter-pg");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config({ path: ".env" });
 const db_url = process.env.DATABASE_URL;
+if (!db_url) {
+    throw new Error("DATABASE_URL is not defined");
+}
 if (!process.env.DATABASE_URL && process.env.NODE_ENV !== "production") {
     console.warn("DATABASE_URL not set (skipping strict validation)");
 }
