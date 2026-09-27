@@ -31,22 +31,42 @@ export async function createPost(
 
 export const readPosts = async (req: Request, res: Response) => {
   console.log("fetching posts");
+
   try {
+    const skip = Math.max(Number(req.query.skip) || 0, 0);
+    const limit = Math.min(Math.max(Number(req.query.limit) || 20, 1), 50);
+
     const posts = await prisma.cXPost.findMany({
+      skip,
+      take: limit,
+
       include: {
         cxUser: true,
         cxComments: true,
         cxLikes: true,
       },
+      orderBy: {
+        created_at: "desc",
+      },
     });
-    return res
-      .status(200)
-      .json({ message: "Posts retrieved successfully", payload: posts });
+
+    return res.status(200).json({
+      message: "Posts retrieved successfully",
+      payload: posts,
+      pagination: {
+        skip,
+        limit,
+        returned: posts.length,
+        hasMore: posts.length === limit,
+      },
+    });
   } catch (error: any) {
     console.log("Error", error);
-    return res
-      .status(500)
-      .json({ message: "Failed to fetch posts", error: error?.message });
+
+    return res.status(500).json({
+      message: "Failed to fetch posts",
+      error: error?.message,
+    });
   }
 };
 
