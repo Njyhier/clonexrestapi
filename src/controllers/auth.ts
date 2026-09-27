@@ -355,7 +355,7 @@ export const signup = async (req: Request, res: Response) => {
         id: true,
         cxusername: true,
         email: true,
-        createdAt: true,
+        createdat: true,
       },
     });
 
