@@ -11,30 +11,39 @@ const SECRET_KEY = process.env.SECRET_KEY!;
 export const login = async (req: Request, res: Response) => {
   try {
     const { password, username } = req.body;
+
     const user = await prisma.cXUser.findFirst({
       where: { cxusername: username },
     });
 
     if (!user) {
-      throw Error("Invalid username or password");
+      throw new Error("Invalid username or password");
     }
 
-    if (!compareSync(password, user?.passwordhash ?? "")) {
-      throw Error("Invalid username or password");
-      return;
+    if (!compareSync(password, user.passwordhash ?? "")) {
+      throw new Error("Invalid username or password");
     }
+
     const token = jwt.sign(
       {
-        userId: user?.id,
+        userId: user.id,
       },
       SECRET_KEY,
     );
+
     return res.status(200).json({
-      message: "Login successfull",
-      payload: { user, token },
+      message: "Login successful",
+      payload: {
+        user,
+        token,
+      },
     });
   } catch (error: any) {
-    console.log("Error", error);
+    console.error("Login error:", error);
+
+    return res.status(401).json({
+      message: error.message || "Login failed",
+    });
   }
 };
 
