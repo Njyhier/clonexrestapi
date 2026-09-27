@@ -249,7 +249,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     // Generate JWT
-    const token = generateToken(String(user.id));
+    const token = generateToken(user.id);
 
     // Never return password hash
     const safeUser = {
@@ -414,13 +414,13 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     // Find user
     const user = await prisma.cXUser.findUnique({
       where: {
-        id: String(payload.userId),
+        id: payload.userId,
       },
       select: {
         id: true,
         cxusername: true,
         email: true,
-        createdAt: true,
+        createdat: true,
       },
     });
 
