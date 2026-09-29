@@ -4,7 +4,7 @@ import { Params } from "../types";
 
 export const createLike = async (req: Request<Params>, res: Response) => {
   try {
-    const { postId, userId } = req.params;
+    const { postId, userId } = req.body;
     if (!userId || !postId) {
       return res.status(400).json({ message: "Missing post or user id" });
     }
