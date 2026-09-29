@@ -3,5 +3,5 @@ import { createLike, unlikePost } from "../controllers/likes";
 
 export const likesRouter: Router = Router();
 
-likesRouter.post("/createlike", createLike);
+likesRouter.post("/createlike/:postId/:userId", createLike);
 likesRouter.delete("/:id", unlikePost);
